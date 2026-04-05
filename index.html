@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>70號窯烤麵包 - 本周行程</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0}
+        :root{
+            --brand-green: #2D5A27; /* 深綠色展現天然感 */
+            --brand-orange: #D35400; /* 溫暖的麵包焦糖色 */
+            --text-dark: #2C1E14;
+            --bg-cream: #FCF8F2;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background: #E5E5E5;
+            color: var(--text-dark);
+            padding: 10px;
+        }
+
+        .shell {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--bg-cream);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Logo 區域優化 */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--brand-green);
+            margin-bottom: 20px;
+        }
+        .logo-img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: white;
+            object-fit: contain;
+            border: 2px solid #ddd;
+        }
+        .brand-info h1 { font-size: 26px; font-weight: 900; color: var(--brand-green); }
+        .slogan { 
+            font-size: 16px; 
+            font-weight: 700; 
+            color: var(--brand-orange);
+            margin-top: 4px;
+        }
+
+        /* 特色主張區 */
+        .features {
+            display: flex;
+            justify-content: space-around;
+            background: white;
+            padding: 10px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+        .feature-item { font-weight: 700; color: var(--brand-green); font-size: 15px; }
+
+        /* 日期導航 */
+        .day-tabs {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .day-tab {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 10px 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .day-tab.active {
+            background: var(--brand-green);
+            color: white;
+            border-color: var(--brand-green);
+        }
+        .dt-day { font-size: 13px; display: block; margin-bottom: 4px; }
+        .dt-num { font-size: 18px; font-weight: 900; }
+
+        /* 站點卡片：針對中年人加大字體 */
+        .section-title {
+            font-size: 18px;
+            font-weight: 900;
+            margin: 20px 0 10px;
+            color: var(--brand-green);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .scard {
+            background: white;
+            border-radius: 15px;
+            padding: 18px;
+            margin-bottom: 12px;
+            border: 1px solid #eee;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .scard.paused { opacity: 0.5; background: #f0f0f0; }
+        .scard-name { font-size: 22px; font-weight: 900; color: #000; margin-bottom: 8px; }
+        .scard-time { font-size: 19px; font-weight: 700; color: var(--brand-orange); margin-bottom: 8px; }
+        .scard-addr { font-size: 15px; color: #555; line-height: 1.4; }
+        .pause-tag { color: #cc0000; font-weight: 900; margin-bottom: 5px; font-size: 16px; }
+
+        /* LINE 按鈕 */
+        .line-btn {
+            background: #06C755;
+            color: white;
+            text-align: center;
+            padding: 18px;
+            border-radius: 15px;
+            font-size: 20px;
+            font-weight: 900;
+            text-decoration: none;
+            display: block;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="shell">
+    <div class="header">
+        <img src="11.jpg" alt="70號窯烤麵包" class="logo-img">
+        <div class="brand-info">
+            <h1>70號窯烤麵包</h1>
+            <p class="slogan">天然純粹・健康首選</p>
+        </div>
+    </div>
+
+    <div class="features">
+        <div class="feature-item">❌ 無蛋</div>
+        <div class="feature-item">❌ 無奶</div>
+        <div class="feature-item) ">❌ 無油</div>
+    </div>
+
+    <div class="day-tabs" id="dayTabs"></div>
+    <div id="content"></div>
+
+    <a href="https://lin.ee/Vnn1uP9" class="line-btn">點我加入 LINE 訂購 (@446wdfai)</a>
+</div>
+
+<script>
+// 資料與邏輯部分 (同前次更新)
+const dates=[
+  {label:'一',num:'4/6',key:'4/6'},
+  {label:'二',num:'4/7',key:'4/7'},
+  {label:'三',num:'4/8',key:'4/8'},
+  {label:'四',num:'4/9',key:'4/9'},
+  {label:'五',num:'4/10',key:'4/10'},
+  {label:'六',num:'4/11',key:'4/11'},
+  {label:'日',num:'4/12',key:'4/12'}
+];
+
+const schedule={
+  '4/6': {
+    afternoon: [{name:'大甲站', time:'16:00～18:00', addr:'得元水產前（台灣銀行ATM對面）', paused:false}]
+  },
+  '4/7': {
+    afternoon: [
+      {name:'烏日九德站', time:'16:00～18:00', addr:'長春街317巷口', paused:false},
+      {name:'沙鹿站', time:'16:00～18:00', addr:'中山路254號(阿如早餐)', paused:false}
+    ]
+  }
+  // ... 其他日期資料可自行按此格式補上
+};
+
+let active = '4/6';
+
+function renderTabs(){
+    const el = document.getElementById('dayTabs');
+    el.innerHTML = dates.map(d => `
+        <div class="day-tab ${d.key===active?'active':''}" onclick="setDay('${d.key}')">
+            <span class="dt-day">${d.label}</span>
+            <span class="dt-num">${d.num.split('/')[1]}</span>
+        </div>
+    `).join('');
+}
+
+function renderContent()
+    const data = schedule[active] || {};
+    const el = document.getElementById('content');
+    let html = '';
+    const emojiMap = {morning:'🌅 早上', noon:'☀️ 中午', afternoon:'🌆 傍晚', evening:'🌙 晚上'};
+    
+    let hasData = false;
+    for(const key in data){
+        hasData = true;
+        html += `<div class="section-title">${emojiMap[key]}</div>`;
+        data[key].forEach(s => {
+            html += `
+                <div class="scard ${s.paused?'paused':''}">
+                    ${s.paused?'<div class="pause-tag">⚠️ 本日暫停一次</div>':''}
+                    <div class="scard-name">${s.name}</div>
+                    <div class="scard-time">${s.time}</div>
+                    <div class="scard-addr">${s.addr}</div>
+                </div>
+            `;
+        });
+    }
+    if(!hasData) html = '<div style="text-align:center;padding:50px;color:#888;">本日無擺攤行程</div>';
+    el.innerHTML = html;
+}
+
+function setDay(k){
+    active = k;
+    renderTabs();
+    renderContent();
+}
+
+setDay('4/6');
+</script>
+
+</body>
+</html>
